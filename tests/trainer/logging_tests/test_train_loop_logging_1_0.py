@@ -24,11 +24,13 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 
+from pytorch_lightning.loggers import TensorBoardLogger
 import pytorch_lightning as pl
 from pytorch_lightning.core.lightning import LightningModule
+from torch.utils.data import DataLoader
 from pytorch_lightning import Trainer, callbacks
 
-from tests.base.boring_model import BoringModel, RandomDictDataset, RandomDictStringDataset
+from tests.base.boring_model import BoringModel, RandomDictDataset, RandomDictStringDataset, RandomDataset
 from tests.base.deterministic_model import DeterministicModel
 
 
@@ -748,3 +750,78 @@ def test_logging_sync_dist_true_gpu(tmpdir):
 
     assert trainer.logged_metrics['foo'] == fake_result
     assert trainer.logged_metrics['bar'] == fake_result
+
+
+def test_logging_with_tensorboard(tmpdir):
+
+    BoringModel
+
+    class LoggingWithTensorboardModel(LightningModule):
+
+        def __init__(self):
+            super().__init__()
+            self.layer = torch.nn.Linear(32, 2)
+
+        def forward(self, x):
+            return self.layer(x)
+
+        def loss(self, batch, prediction):
+            # An arbitrary loss to have a loss that updates the model weights during `Trainer.fit` calls
+            return torch.nn.functional.mse_loss(prediction, torch.ones_like(prediction))
+
+        def training_step(self, batch, batch_idx):
+            output = self.layer(batch)
+            loss = self.loss(batch, output)
+            self.log("train_loss", loss)
+            return {"loss": loss}
+
+        def validation_step(self, batch, batch_idx, loader_idx=0):
+            output = self.layer(batch)
+            loss = self.loss(batch, output)
+            loss_dict = {
+                f"val_loss": loss
+            }
+            self.log("val_loss", loss, on_epoch=True)
+            return loss_dict
+
+        def test_step(self, batch, batch_idx):
+            output = self.layer(batch)
+            loss = self.loss(batch, output)
+            self.log('fake_test_acc', loss)
+            return {"y": loss}
+
+        def test_epoch_end(self, outputs) -> None:
+            torch.stack([x["y"] for x in outputs]).mean()
+
+        def configure_optimizers(self):
+            optimizer = torch.optim.SGD(self.layer.parameters(), lr=0.1)
+            lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=1)
+            return [optimizer], [lr_scheduler]
+
+    num_samples = 4
+    train = RandomDataset(32, num_samples)
+    train = DataLoader(train, batch_size=32)
+    val_set = RandomDataset(32, num_samples)
+    val = DataLoader(val_set, batch_size=32)
+    test = RandomDataset(32, num_samples)
+    test = DataLoader(test, batch_size=32)
+
+    model = BoringModel()
+
+    logger = TensorBoardLogger(tmpdir)
+    # Initialize a trainer
+    trainer = pl.Trainer(
+        default_root_dir=tmpdir,
+        logger=logger,
+        max_epochs=10,
+        progress_bar_refresh_rate=1
+    )
+
+    # Train the model ⚡
+    trainer.fit(model)
+
+    trainer.test(test_dataloaders=test)
+
+    print(f"tensorboard --logdir {os.path.join(tmpdir, 'default')}")
+
+    breakpoint()
