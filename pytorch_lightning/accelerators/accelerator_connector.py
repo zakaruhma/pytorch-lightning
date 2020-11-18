@@ -141,7 +141,7 @@ class AcceleratorConnector:
         # NVIDIA setup
         self.set_nvidia_flags(self.trainer.is_slurm_managing_tasks, self.trainer.data_parallel_device_ids)
 
-        self.trainer.on_colab_kaggle = os.getenv('COLAB_GPU') or os.getenv('KAGGLE_URL_BASE')
+        self.trainer.on_colab_kaggle = os.getenv('COLAB_TPU_ADDR') or os.getenv('KAGGLE_URL_BASE')
 
         self.trainer.replace_sampler_ddp = replace_sampler_ddp
 
