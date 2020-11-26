@@ -12,17 +12,17 @@ PyTorch Lightning Documentation
    :name: start
    :caption: Getting started
 
-   new-project
-   converting
-   rapid_prototyping_templates
+   pages/new-project
+   pages/converting
+   pages/rapid_prototyping_templates
 
 .. toctree::
    :maxdepth: 1
    :name: guides
    :caption: Best practices
 
-   style_guide
-   performance
+   pages/style_guide
+   pages/performance
    Lightning project template<https://github.com/PyTorchLightning/pytorch-lightning-conference-seed>
 
 
@@ -31,20 +31,20 @@ PyTorch Lightning Documentation
    :name: pl_docs
    :caption: Lightning API
 
-   lightning_module
-   trainer
+   pages/lightning_module
+   pages/trainer
 
 .. toctree::
    :maxdepth: 2
    :name: docs
    :caption: Optional extensions
 
-   accelerators
-   callbacks
-   datamodules
-   logging
-   metrics
-   plugins
+   pages/accelerators
+   pages/callbacks
+   pages/datamodules
+   pages/logging
+   pages/metrics
+   pages/plugins
 
 
 .. toctree::
@@ -62,22 +62,22 @@ PyTorch Lightning Documentation
    :name: api
    :caption: API References
 
-   api_references
+   pages/api_references
 
 .. toctree::
    :maxdepth: 1
    :name: Bolts
    :caption: Bolts
 
-   bolts
+   pages/bolts
 
 .. toctree::
    :maxdepth: 1
    :name: Examples
    :caption: Examples
 
-   pytorch_ecoystem
-   community_examples
+   pages/pytorch_ecoystem
+   pages/community_examples
    Autoencoder <https://pytorch-lightning-bolts.readthedocs.io/en/latest/autoencoders.html#autoencoders>
    BYOL <https://pytorch-lightning-bolts.readthedocs.io/en/latest/self_supervised_models.html#byol>
    DQN <https://pytorch-lightning-bolts.readthedocs.io/en/latest/reinforce_learn.html#deep-q-network-dqn>
@@ -92,35 +92,35 @@ PyTorch Lightning Documentation
    :name: Common Use Cases
    :caption: Common Use Cases
 
-   cloud_training
-   amp
-   slurm
-   child_modules
-   debugging
-   loggers
-   early_stopping
-   fast_training
-   hyperparameters
-   lr_finder
-   multi_gpu
-   multiple_loaders
-   weights_loading
-   optimizers
-   profiler
-   single_gpu
-   sequences
-   training_tricks
-   transfer_learning
-   tpu
-   test_set
-   production_inference
+   pages/cloud_training
+   pages/amp
+   pages/slurm
+   pages/child_modules
+   pages/debugging
+   pages/loggers
+   pages/early_stopping
+   pages/fast_training
+   pages/hyperparameters
+   pages/lr_finder
+   pages/multi_gpu
+   pages/multiple_loaders
+   pages/weights_loading
+   pages/optimizers
+   pages/profiler
+   pages/single_gpu
+   pages/sequences
+   pages/training_tricks
+   pages/transfer_learning
+   pages/tpu
+   pages/test_set
+   pages/production_inference
 
 .. toctree::
    :maxdepth: 1
    :name: Partner Domain Frameworks
    :caption: Partner Domain Frameworks
 
-   asr_nlp_tts
+   pages/asr_nlp_tts
 
 .. toctree::
    :maxdepth: 1
