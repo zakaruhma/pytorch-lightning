@@ -52,7 +52,7 @@ PyTorch Lightning Documentation
    :name: Tutorials
    :caption: Tutorials
 
-   introduction_guide
+   pages/introduction_guide
    PyTorch Lightning 101 class <https://www.youtube.com/playlist?list=PLaMu-SDt_RB5NUm67hU2pdE75j6KaIOv2>
    From PyTorch to PyTorch Lightning [Blog] <https://towardsdatascience.com/from-pytorch-to-pytorch-lightning-a-gentle-introduction-b371b7caaf09>
    From PyTorch to PyTorch Lightning [Video] <https://www.youtube.com/watch?v=QHww1JH7IDU>
@@ -131,7 +131,7 @@ PyTorch Lightning Documentation
    CODE_OF_CONDUCT.md
    CONTRIBUTING.md
    BECOMING_A_CORE_CONTRIBUTOR.md
-   governance.md
+   pages/governance.md
    CHANGELOG.md
 
 Indices and tables
