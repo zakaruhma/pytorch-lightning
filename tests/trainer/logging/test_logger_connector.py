@@ -407,6 +407,15 @@ def test_epoch_results_cache_dp(tmpdir):
             #     assert not isinstance(r, torch.Tensor) or r.device == torch.device("cuda", 0)
             return results
 
+        def validation_step(self, *args, **kwargs):
+            result = super().validation_step(*args, **kwargs)
+            val_loss = result["x"]
+            self.log('valid_loss', val_loss)
+            return result
+
+        def validation_epoch_end(self, outputs):
+            print(self.trainer.logger_connector.cached_results)
+
     model = TestModel()
     trainer = Trainer(
         default_root_dir=tmpdir,
