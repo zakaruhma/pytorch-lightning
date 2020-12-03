@@ -76,12 +76,12 @@ class BoringModel(LightningModule):
         output = self.layer(batch)
         loss = self.loss(batch, output)
         return {"loss": loss}
-
-    def training_step_end(self, training_step_outputs):
-        return training_step_outputs
-
-    def training_epoch_end(self, outputs) -> None:
-        torch.stack([x["loss"] for x in outputs]).mean()
+    #
+    # def training_step_end(self, training_step_outputs):
+    #     return training_step_outputs
+    #
+    # def training_epoch_end(self, outputs) -> None:
+    #     torch.stack([x["loss"] for x in outputs]).mean()
 
     def validation_step(self, batch, batch_idx):
         output = self.layer(batch)
@@ -89,8 +89,8 @@ class BoringModel(LightningModule):
         self.log("valid_loss", loss)
         return {"x": loss}
 
-    def validation_epoch_end(self, outputs) -> None:
-        torch.stack([x['x'] for x in outputs]).mean()
+    # def validation_epoch_end(self, outputs) -> None:
+    #     torch.stack([x['x'] for x in outputs]).mean()
 
     def test_step(self, batch, batch_idx):
         output = self.layer(batch)
@@ -131,7 +131,8 @@ def run_test():
         gpus=2,
         default_root_dir=os.getcwd(),
         limit_train_batches=1,
-        limit_val_batches=1,
+        # limit_val_batches=1,
+        num_sanity_val_steps=0,
         max_epochs=1,
         weights_summary=None,
     )
