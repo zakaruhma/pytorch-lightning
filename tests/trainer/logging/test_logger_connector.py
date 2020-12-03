@@ -28,6 +28,7 @@ from pytorch_lightning.trainer import Trainer
 from pytorch_lightning.trainer.connectors.logger_connector import LoggerConnector
 from pytorch_lightning.trainer.connectors.logger_connector.callback_hook_validator import CallbackHookNameValidator
 from pytorch_lightning.trainer.connectors.logger_connector.epoch_result_store import EpochResultStore
+from pytorch_lightning.utilities.apply_func import apply_to_collection
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
 from tests.base.boring_model import BoringModel, RandomDataset
 
@@ -400,23 +401,38 @@ def test_epoch_results_cache_dp(tmpdir):
             self.log("loss", result["loss"])
             return result
 
-        def training_epoch_end(self, outputs):
-            results = super().training_epoch_end(outputs)
-            print(self.trainer.logger_connector.cached_results)
-            # for r in self.trainer.logger_connector.cached_results:
-            #     print(r)
-            #     assert not isinstance(r, torch.Tensor) or r.device == torch.device("cuda", 0)
-            return results
+        def training_step_end(self, training_step_outputs):
+            # required for dp
+            loss = training_step_outputs["loss"].mean()
+            return loss
+
+        # def training_epoch_end(self, outputs):
+        #     results = super().training_epoch_end(outputs)
+        #     print(self.trainer.logger_connector.cached_results)
+        #     # for r in self.trainer.logger_connector.cached_results:
+        #     #     print(r)
+        #     #     assert not isinstance(r, torch.Tensor) or r.device == torch.device("cuda", 0)
+        #     return results
 
         def validation_step(self, *args, **kwargs):
             result = super().validation_step(*args, **kwargs)
             val_loss = result["x"]
             self.log('valid_loss', val_loss)
+
+            epoch_cache = self.trainer.logger_connector.cached_results
+            # {'validation_step': {'0': [{'valid_loss': tensor(2.1693, device='cuda:0')}]
+
+            def check_device(tensor):
+                assert tensor.device == torch.device("cuda", 0)
+
+            apply_to_collection(epoch_cache, dtype=torch.Tensor, function=check_device)
             return result
 
-        def validation_epoch_end(self, outputs):
-            results = super().validation_epoch_end(outputs)
-            print(self.trainer.logger_connector.cached_results)
+        # def validation_epoch_end(self, outputs):
+        #     results = super().validation_epoch_end(outputs)
+
+        # def on_validation_epoch_end(self) -> None:
+        #
 
         def train_dataloader(self):
             return DataLoader(RandomDataset(32, 64), batch_size=4)
