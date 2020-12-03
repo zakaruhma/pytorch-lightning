@@ -409,13 +409,32 @@ def test_epoch_results_cache_dp(tmpdir):
             loss = training_step_outputs["loss"].mean()
             return loss
 
+        # def training_epoch_end(self, outputs):
+        #     results = super().training_epoch_end(outputs)
+        #     print(self.trainer.logger_connector.cached_results)
+        #     # for r in self.trainer.logger_connector.cached_results:
+        #     #     print(r)
+        #     #     assert not isinstance(r, torch.Tensor) or r.device == torch.device("cuda", 0)
+        #     return results
+
         def validation_step(self, *args, **kwargs):
             result = super().validation_step(*args, **kwargs)
-            val_loss = torch.rand(1, device=torch.device("cuda", 1))
+            val_loss = result["x"]
             self.log('valid_loss', val_loss)
+
             epoch_cache = self.trainer.logger_connector.cached_results
+            # {'validation_step': {'0': [{'valid_loss': tensor(2.1693, device='cuda:0')}]
+
+
+
             apply_to_collection(epoch_cache, dtype=torch.Tensor, function=is_on_root_device)
             return result
+
+        # def validation_epoch_end(self, outputs):
+        #     results = super().validation_epoch_end(outputs)
+
+        # def on_validation_epoch_end(self) -> None:
+        #
 
         def train_dataloader(self):
             return DataLoader(RandomDataset(32, 64), batch_size=4)
