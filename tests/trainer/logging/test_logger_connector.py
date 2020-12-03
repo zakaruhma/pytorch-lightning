@@ -400,13 +400,13 @@ def test_epoch_results_cache_dp(tmpdir):
             self.log("loss", result["loss"])
             return result
 
-        # def training_epoch_end(self, outputs):
-        #     results = super().training_epoch_end(outputs)
-        #     print(self.trainer.logger_connector.cached_results)
-        #     # for r in self.trainer.logger_connector.cached_results:
-        #     #     print(r)
-        #     #     assert not isinstance(r, torch.Tensor) or r.device == torch.device("cuda", 0)
-        #     return results
+        def training_epoch_end(self, outputs):
+            results = super().training_epoch_end(outputs)
+            print(self.trainer.logger_connector.cached_results)
+            # for r in self.trainer.logger_connector.cached_results:
+            #     print(r)
+            #     assert not isinstance(r, torch.Tensor) or r.device == torch.device("cuda", 0)
+            return results
 
         def validation_step(self, *args, **kwargs):
             result = super().validation_step(*args, **kwargs)
@@ -414,8 +414,9 @@ def test_epoch_results_cache_dp(tmpdir):
             self.log('valid_loss', val_loss)
             return result
 
-        # def validation_epoch_end(self, outputs):
-        #     print(self.trainer.logger_connector.cached_results)
+        def validation_epoch_end(self, outputs):
+            results = super().validation_epoch_end(outputs)
+            print(self.trainer.logger_connector.cached_results)
 
         def train_dataloader(self):
             return DataLoader(RandomDataset(32, 64), batch_size=4)
@@ -431,9 +432,8 @@ def test_epoch_results_cache_dp(tmpdir):
         default_root_dir=tmpdir,
         accelerator="dp",
         gpus=2,
-        num_sanity_val_steps=-1,
-        # limit_train_batches=2,
-        # limit_val_batches=2,
+        limit_train_batches=2,
+        limit_val_batches=2,
         max_epochs=1,
     )
     trainer.fit(model)
