@@ -120,9 +120,9 @@ def run_test():
             print('override any method to prove your bug')
 
     # fake data
-    train_data = torch.utils.data.DataLoader(RandomDataset(32, 64))
-    val_data = torch.utils.data.DataLoader(RandomDataset(32, 64))
-    test_data = torch.utils.data.DataLoader(RandomDataset(32, 64))
+    train_data = torch.utils.data.DataLoader(RandomDataset(32, 64), batch_size=4)
+    val_data = torch.utils.data.DataLoader(RandomDataset(32, 64), batch_size=4)
+    test_data = torch.utils.data.DataLoader(RandomDataset(32, 64), batch_size=4)
 
     # model
     model = TestModel()
