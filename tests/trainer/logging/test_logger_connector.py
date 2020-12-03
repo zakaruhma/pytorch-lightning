@@ -421,6 +421,7 @@ def test_epoch_results_cache_dp(tmpdir):
         default_root_dir=tmpdir,
         accelerator="dp",
         gpus=2,
+        num_sanity_val_steps=-1,
         # limit_train_batches=2,
         # limit_val_batches=2,
         max_epochs=1,
