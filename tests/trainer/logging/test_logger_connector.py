@@ -20,6 +20,7 @@ from unittest import mock
 
 import pytest
 import torch
+from torch.utils.data import DataLoader
 
 from pytorch_lightning.callbacks.base import Callback
 from pytorch_lightning.core.step_result import Result
@@ -415,6 +416,15 @@ def test_epoch_results_cache_dp(tmpdir):
 
         # def validation_epoch_end(self, outputs):
         #     print(self.trainer.logger_connector.cached_results)
+
+        def train_dataloader(self):
+            return DataLoader(RandomDataset(32, 64), batch_size=4)
+
+        def val_dataloader(self):
+            return DataLoader(RandomDataset(32, 64), batch_size=4)
+
+        def test_dataloader(self):
+            return DataLoader(RandomDataset(32, 64), batch_size=4)
 
     model = TestModel()
     trainer = Trainer(
