@@ -395,6 +395,7 @@ def test_call_back_validator(tmpdir):
 def test_epoch_results_cache_dp(tmpdir):
 
     def assert_on_root_device(tensor):
+        assert False
         assert tensor.device == torch.device("cuda", 0)
         return tensor
 
@@ -413,9 +414,10 @@ def test_epoch_results_cache_dp(tmpdir):
         def validation_step(self, *args, **kwargs):
             result = super().validation_step(*args, **kwargs)
             val_loss = result["x"]
-            self.log('valid_loss', val_loss)
-            epoch_cache = self.trainer.logger_connector.cached_results
-            apply_to_collection(epoch_cache, dtype=torch.Tensor, function=assert_on_root_device)
+            # self.log('valid_loss', val_loss)
+            # epoch_cache = self.trainer.logger_connector.cached_results._internals
+            # assert len(epoch_cache)
+            apply_to_collection(result, dtype=torch.Tensor, function=assert_on_root_device)
 
             return result
 
