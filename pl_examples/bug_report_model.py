@@ -127,6 +127,8 @@ def run_test():
     # model
     model = TestModel()
     trainer = Trainer(
+        accelerator="dp",
+        gpus=2,
         default_root_dir=os.getcwd(),
         limit_train_batches=1,
         limit_val_batches=1,
