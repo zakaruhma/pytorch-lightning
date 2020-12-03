@@ -402,7 +402,7 @@ def test_epoch_results_cache_dp(tmpdir):
 
         def training_step(self, *args, **kwargs):
             result = super().training_step(*args, **kwargs)
-            self.log("loss", result["loss"])
+            # self.log("loss", result["loss"])
             return result
 
         def training_step_end(self, training_step_outputs):
