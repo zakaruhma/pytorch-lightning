@@ -396,7 +396,7 @@ def test_epoch_results_cache_dp(tmpdir):
 
         def training_step(self, *args, **kwargs):
             result = super().training_step(*args, **kwargs)
-            self.log("loss", result["loss"], on_epoch=True)
+            self.log("loss", result["loss"])
             return result
 
         # def training_epoch_end(self, outputs):
@@ -421,8 +421,8 @@ def test_epoch_results_cache_dp(tmpdir):
         default_root_dir=tmpdir,
         accelerator="dp",
         gpus=2,
-        limit_train_batches=2,
-        limit_val_batches=2,
+        # limit_train_batches=2,
+        # limit_val_batches=2,
         max_epochs=1,
     )
     trainer.fit(model)
