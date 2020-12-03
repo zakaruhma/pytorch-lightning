@@ -411,7 +411,7 @@ def test_epoch_results_cache_dp(tmpdir):
 
         def validation_step(self, *args, **kwargs):
             result = super().validation_step(*args, **kwargs)
-            val_loss = torch.rand(1, device=self.device)
+            val_loss = torch.rand(1, device=torch.device("cuda", 1))
             self.log('valid_loss', val_loss)
             epoch_cache = self.trainer.logger_connector.cached_results
             apply_to_collection(epoch_cache, dtype=torch.Tensor, function=is_on_root_device)
