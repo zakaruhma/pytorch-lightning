@@ -399,13 +399,13 @@ def test_epoch_results_cache_dp(tmpdir):
             self.log("loss", result["loss"], on_epoch=True)
             return result
 
-        def training_epoch_end(self, outputs):
-            results = super().training_epoch_end(outputs)
-            print(self.trainer.logger_connector.cached_results)
-            # for r in self.trainer.logger_connector.cached_results:
-            #     print(r)
-            #     assert not isinstance(r, torch.Tensor) or r.device == torch.device("cuda", 0)
-            return results
+        # def training_epoch_end(self, outputs):
+        #     results = super().training_epoch_end(outputs)
+        #     print(self.trainer.logger_connector.cached_results)
+        #     # for r in self.trainer.logger_connector.cached_results:
+        #     #     print(r)
+        #     #     assert not isinstance(r, torch.Tensor) or r.device == torch.device("cuda", 0)
+        #     return results
 
         def validation_step(self, *args, **kwargs):
             result = super().validation_step(*args, **kwargs)
@@ -413,8 +413,8 @@ def test_epoch_results_cache_dp(tmpdir):
             self.log('valid_loss', val_loss)
             return result
 
-        def validation_epoch_end(self, outputs):
-            print(self.trainer.logger_connector.cached_results)
+        # def validation_epoch_end(self, outputs):
+        #     print(self.trainer.logger_connector.cached_results)
 
     model = TestModel()
     trainer = Trainer(
