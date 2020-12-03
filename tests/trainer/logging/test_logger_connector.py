@@ -387,3 +387,33 @@ def test_call_back_validator(tmpdir):
                                                       on_step=None,
                                                       on_epoch=None)
         assert result is None
+
+
+@pytest.mark.skipif(torch.cuda.device_count() < 2, reason="test requires two GPUs")
+def test_epoch_results_cache_dp(tmpdir):
+
+    class TestModel(BoringModel):
+
+        def training_step(self, *args, **kwargs):
+            result = super().training_step(*args, **kwargs)
+            self.log("loss", result["loss"], on_epoch=True)
+            return result
+
+        def training_epoch_end(self, outputs):
+            results = super().training_epoch_end(outputs)
+            print(self.trainer.logger_connector.cached_results)
+            # for r in self.trainer.logger_connector.cached_results:
+            #     print(r)
+            #     assert not isinstance(r, torch.Tensor) or r.device == torch.device("cuda", 0)
+            return results
+
+    model = TestModel()
+    trainer = Trainer(
+        default_root_dir=tmpdir,
+        accelerator="dp",
+        gpus=2,
+        limit_train_batches=2,
+        limit_val_batches=2,
+        max_epochs=1,
+    )
+    trainer.fit(model)
