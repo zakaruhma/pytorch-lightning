@@ -422,16 +422,11 @@ def test_epoch_results_cache_dp(tmpdir):
             epoch_cache = self.trainer.logger_connector.cached_results
             # {'validation_step': {'0': [{'valid_loss': tensor(2.1693, device='cuda:0')}]
 
-<<<<<<< HEAD
-
-
-            apply_to_collection(epoch_cache, dtype=torch.Tensor, function=is_on_root_device)
-=======
             def check_device(tensor):
                 assert tensor.device == torch.device("cuda", 0)
 
             apply_to_collection(epoch_cache, dtype=torch.Tensor, function=check_device)
->>>>>>> parent of 464e1a7... adsfasdf
+
             return result
 
         # def validation_epoch_end(self, outputs):
