@@ -86,6 +86,7 @@ class BoringModel(LightningModule):
     def validation_step(self, batch, batch_idx):
         output = self.layer(batch)
         loss = self.loss(batch, output)
+        self.log("valid_loss", loss)
         return {"x": loss}
 
     def validation_epoch_end(self, outputs) -> None:
