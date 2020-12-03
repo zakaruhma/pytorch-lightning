@@ -420,6 +420,9 @@ def test_epoch_results_cache_dp(tmpdir):
 
             return result
 
+        def validation_epoch_end(self, outputs):
+            print(self.trainer.logger_connector.cached_results._internals)
+
         def train_dataloader(self):
             return DataLoader(RandomDataset(32, 64), batch_size=4)
 
