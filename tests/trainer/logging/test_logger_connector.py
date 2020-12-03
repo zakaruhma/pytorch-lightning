@@ -395,7 +395,6 @@ def test_call_back_validator(tmpdir):
 def test_epoch_results_cache_dp(tmpdir):
 
     def assert_on_root_device(tensor):
-        assert False
         assert tensor.device == torch.device("cuda", 0)
         return tensor
 
