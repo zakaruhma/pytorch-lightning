@@ -413,7 +413,7 @@ def test_epoch_results_cache_dp(tmpdir):
         def validation_step(self, *args, **kwargs):
             result = super().validation_step(*args, **kwargs)
             val_loss = result["x"]
-            # self.log('valid_loss', val_loss)
+            self.log('valid_loss', val_loss)
             # epoch_cache = self.trainer.logger_connector.cached_results._internals
             # assert len(epoch_cache)
             # apply_to_collection(result, dtype=torch.Tensor, function=assert_on_root_device)
