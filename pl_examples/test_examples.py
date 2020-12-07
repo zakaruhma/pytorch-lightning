@@ -38,17 +38,12 @@ ARGS_DP = ARGS_DEFAULT + """
 --accelerator dp \
 """
 
-ARGS_DP_AMP = ARGS_DP + """
---precision 16 \
-"""
-
 ARGS_DDP = ARGS_DEFAULT + """
 --gpus 2 \
 --accelerator ddp \
---precision 16 \
 """
 
-ARGS_DDP_AMP = ARGS_DEFAULT + """
+ARGS_AMP = """
 --precision 16 \
 """
 
@@ -59,7 +54,7 @@ ARGS_DDP_AMP = ARGS_DEFAULT + """
     'pl_examples.basic_examples.autoencoder',
 ])
 @pytest.mark.skipif(torch.cuda.device_count() < 2, reason="test requires multi-GPU machine")
-@pytest.mark.parametrize('cli_args', [ARGS_DP, ARGS_DP_AMP])
+@pytest.mark.parametrize('cli_args', [ARGS_DP, ARGS_DP + ARGS_AMP])
 def test_examples_dp(tmpdir, import_cli, cli_args):
 
     module = importlib.import_module(import_cli)
@@ -76,7 +71,7 @@ def test_examples_dp(tmpdir, import_cli, cli_args):
     'pl_examples.basic_examples.autoencoder',
 ])
 @pytest.mark.skipif(torch.cuda.device_count() < 2, reason="test requires multi-GPU machine")
-@pytest.mark.parametrize('cli_args', [ARGS_DDP, ARGS_DDP_AMP])
+@pytest.mark.parametrize('cli_args', [ARGS_DDP, ARGS_DDP + ARGS_AMP])
 def test_examples_ddp(tmpdir, import_cli, cli_args):
 
     module = importlib.import_module(import_cli)
