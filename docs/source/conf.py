@@ -358,6 +358,7 @@ import importlib
 import os
 import torch
 
+from pytorch_lightning.core.datamodule import LightningDataModule
 from pytorch_lightning.utilities import (
     NATIVE_AMP_AVAILABLE,
     APEX_AVAILABLE,

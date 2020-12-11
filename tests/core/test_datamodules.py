@@ -13,21 +13,21 @@
 # limitations under the License.
 import pickle
 from argparse import ArgumentParser
-from unittest.mock import MagicMock
 from typing import Optional
+from unittest.mock import MagicMock
 
 import pytest
 import torch
 from torch.utils.data import DataLoader, random_split
 
 from pytorch_lightning import LightningDataModule, Trainer, seed_everything
-from tests.base import EvalModelTemplate
-from tests.base.datasets import TrialMNIST
-from tests.base.datamodules import TrialMNISTDataModule
-from tests.base.develop_utils import reset_seed
-from pytorch_lightning.utilities.model_utils import is_overridden
 from pytorch_lightning.accelerators.gpu_accelerator import GPUAccelerator
 from pytorch_lightning.callbacks import ModelCheckpoint
+from pytorch_lightning.utilities.model_utils import is_overridden
+from tests.base import EvalModelTemplate
+from tests.base.datamodules import TrialMNISTDataModule
+from tests.base.datasets import TrialMNIST
+from tests.base.develop_utils import reset_seed
 
 
 def test_can_prepare_data(tmpdir):
@@ -318,7 +318,7 @@ def test_trainer_attached_to_dm(tmpdir):
     assert dm.trainer is not None
 
 
-@pytest.mark.skipif(torch.cuda.device_count() < 1, reason="test requires multi-GPU machine")
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="test requires GPU machine")
 def test_full_loop_single_gpu(tmpdir):
     reset_seed()
 
@@ -371,7 +371,7 @@ def test_full_loop_dp(tmpdir):
     assert result['test_acc'] > 0.8
 
 
-@pytest.mark.skipif(torch.cuda.device_count() < 1, reason="test requires multi-GPU machine")
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="test requires GPU machine")
 def test_dm_prepare_batch_for_transfer(tmpdir):
 
     class CustomBatch:
@@ -388,35 +388,20 @@ def test_dm_prepare_batch_for_transfer(tmpdir):
         def on_before_batch_transfer(self, batch):
             self.on_before_batch_transfer_hook_rank = self.rank
             self.rank += 1
-
-            if isinstance(batch, CustomBatch):
-                batch.samples += 1
-            else:
-                batch = super().on_before_batch_transfer(batch)
-
+            batch.samples += 1
             return batch
 
         def on_after_batch_transfer(self, batch):
             self.on_after_batch_transfer_hook_rank = self.rank
             self.rank += 1
-
-            if isinstance(batch, CustomBatch):
-                batch.targets *= 2
-            else:
-                batch = super().on_after_batch_transfer(batch)
-
+            batch.targets *= 2
             return batch
 
         def transfer_batch_to_device(self, batch, device):
             self.transfer_batch_to_device_hook_rank = self.rank
             self.rank += 1
-
-            if isinstance(batch, CustomBatch):
-                batch.samples = batch.samples.to(device)
-                batch.targets = batch.targets.to(device)
-            else:
-                batch = super().transfer_batch_to_device(batch, device)
-
+            batch.samples = batch.samples.to(device)
+            batch.targets = batch.targets.to(device)
             return batch
 
     model = EvalModelTemplate()
