@@ -125,10 +125,8 @@ def test_early_stopping_cpu_model(enable_pl_optimizer, tmpdir):
     model.unfreeze()
 
 
-@pytest.mark.skipif(platform.system() == "Windows",
-                    reason="Distributed training is not supported on Windows")
-@pytest.mark.skipif((platform.system() == "Darwin" and
-                     LooseVersion(torch.__version__) < LooseVersion("1.3.0")),
+@pytest.mark.skipif(platform.system() == "Windows", reason="Distributed training is not supported on Windows")
+@pytest.mark.skipif((platform.system() == "Darwin" and LooseVersion(torch.__version__) < LooseVersion("1.3.0")),
                     reason="Distributed training is not supported on MacOS before Torch 1.3.0")
 @pytest.mark.parametrize("enable_pl_optimizer", [False, True])
 def test_multi_cpu_model_ddp(enable_pl_optimizer, tmpdir):

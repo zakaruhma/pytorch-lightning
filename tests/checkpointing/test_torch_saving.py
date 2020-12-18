@@ -19,6 +19,7 @@ import torch
 
 from pytorch_lightning import Trainer
 from pytorch_lightning.core.optimizer import LightningOptimizer
+from pytorch_lightning.utilities import TPU_AVAILABLE
 from tests.base import BoringModel
 
 
@@ -43,8 +44,8 @@ def test_model_torch_save(tmpdir, enable_pl_optimizer):
     assert is_lightning_optimizer if enable_pl_optimizer else not is_lightning_optimizer
 
 
-@pytest.mark.skipif(platform.system() == "Windows",
-                    reason="Distributed training is not supported on Windows")
+@pytest.mark.skipif(platform.system() == "Windows", reason="Distributed training is not supported on Windows")
+@pytest.mark.skipif(TPU_AVAILABLE, reason='This case is not supported on TPUs')
 def test_model_torch_save_ddp_cpu(tmpdir):
     """Test to ensure torch save does not fail for model and trainer using cpu ddp."""
     model = BoringModel()
