@@ -31,5 +31,3 @@ RANDOM_PORTS = list(np.random.randint(12000, 19000, 1000))
 
 if not os.path.isdir(TEMP_PATH):
     os.mkdir(TEMP_PATH)
-
-TPU_AVAILABLE = XLADeviceUtils.tpu_device_exists()
