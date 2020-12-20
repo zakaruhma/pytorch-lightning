@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import inspect
+from unittest.mock import MagicMock
 
 import pytest
 import torch
-from unittest.mock import MagicMock
 
 from pytorch_lightning import Trainer
 from pytorch_lightning.accelerators.gpu_accelerator import GPUAccelerator
-from tests.base import EvalModelTemplate, BoringModel
+from tests.base import BoringModel, EvalModelTemplate
 
 
 @pytest.mark.parametrize('max_steps', [1, 2, 3])
@@ -328,6 +328,8 @@ def test_trainer_model_hook_system(tmpdir):
         'on_after_backward',
         'on_before_zero_grad',
         'on_train_batch_end',
+        'on_epoch_end',
+        'on_train_epoch_end',
         'on_validation_model_eval',
         'on_validation_epoch_start',
         'on_validation_batch_start',
@@ -335,8 +337,6 @@ def test_trainer_model_hook_system(tmpdir):
         'on_validation_epoch_end',
         'on_save_checkpoint',
         'on_validation_model_train',
-        'on_epoch_end',
-        'on_train_epoch_end',
         'on_train_end',
         'on_fit_end',
     ]
