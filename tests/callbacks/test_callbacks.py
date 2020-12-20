@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from unittest import mock
-from unittest.mock import ANY, MagicMock, call
+from unittest.mock import ANY, call, MagicMock
 
 from pytorch_lightning import Trainer
 from tests.base import BoringModel
@@ -88,6 +88,8 @@ def test_trainer_callback_system(torch_save):
         call.on_before_zero_grad(trainer, model, trainer.optimizers[0]),
         call.on_batch_end(trainer, model),
         call.on_train_batch_end(trainer, model, ANY, ANY, 2, 0),
+        call.on_epoch_end(trainer, model),
+        call.on_train_epoch_end(trainer, model, ANY),
         call.on_validation_start(trainer, model),
         call.on_validation_epoch_start(trainer, model),
         call.on_validation_batch_start(trainer, model, ANY, 0, 0),
@@ -95,8 +97,6 @@ def test_trainer_callback_system(torch_save):
         call.on_validation_epoch_end(trainer, model),
         call.on_validation_end(trainer, model),
         call.on_save_checkpoint(trainer, model),
-        call.on_epoch_end(trainer, model),
-        call.on_train_epoch_end(trainer, model, ANY),
         call.on_train_end(trainer, model),
         call.on_fit_end(trainer, model),
         call.teardown(trainer, model, 'fit'),

@@ -17,7 +17,7 @@ from unittest import mock
 import pytest
 import torch
 
-from pytorch_lightning import Trainer, callbacks, seed_everything
+from pytorch_lightning import callbacks, seed_everything, Trainer
 from tests.base import BoringModel
 
 
@@ -101,7 +101,8 @@ def test_default_checkpoint_freq(save_mock, tmpdir, epochs, val_check_interval, 
         default_root_dir=tmpdir,
         max_epochs=epochs,
         weights_summary=None,
-        val_check_interval=val_check_interval
+        val_check_interval=val_check_interval,
+        progress_bar_refresh_rate=0,
     )
     trainer.fit(model)
 
