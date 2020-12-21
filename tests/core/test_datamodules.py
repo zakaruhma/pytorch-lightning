@@ -23,8 +23,7 @@ from torch.utils.data import DataLoader, random_split
 from pytorch_lightning import LightningDataModule, Trainer
 from pytorch_lightning.accelerators.gpu_accelerator import GPUAccelerator
 from pytorch_lightning.callbacks import ModelCheckpoint
-from pytorch_lightning.utilities.model_utils import is_overridden
-from tests.base import EvalModelTemplate
+from tests.base import BoringModel, EvalModelTemplate
 from tests.base.datamodules import TrialMNISTDataModule
 from tests.base.datasets import TrialMNIST
 from tests.base.develop_utils import reset_seed
@@ -405,9 +404,9 @@ def test_dm_prepare_batch_for_transfer(tmpdir):
             batch.targets = batch.targets.to(device)
             return batch
 
-    model = EvalModelTemplate()
+    model = BoringModel()
     dm = CurrentTestDM()
-    batch = CustomBatch((torch.zeros(5, 28), torch.ones(5, 1, dtype=torch.long)))
+    batch = CustomBatch((torch.zeros(5, 32), torch.ones(5, 1, dtype=torch.long)))
 
     trainer = Trainer(gpus=1)
     # running .fit() would require us to implement custom data loaders, we mock the model reference instead
