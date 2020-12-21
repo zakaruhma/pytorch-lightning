@@ -15,7 +15,6 @@
 # import m2r
 import builtins
 import glob
-import inspect
 import os
 import shutil
 import sys
@@ -360,12 +359,12 @@ import torch
 
 from pytorch_lightning.core.datamodule import LightningDataModule
 from pytorch_lightning.utilities import (
-    NATIVE_AMP_AVAILABLE,
-    APEX_AVAILABLE,
-    XLA_AVAILABLE,
-    TPU_AVAILABLE,
+    _NATIVE_AMP_AVAILABLE,
+    _APEX_AVAILABLE,
+    _XLA_AVAILABLE,
+    _TPU_AVAILABLE,
 )
-TORCHVISION_AVAILABLE = importlib.util.find_spec("torchvision") is not None
+_TORCHVISION_AVAILABLE = importlib.util.find_spec("torchvision") is not None
 
 
 """
