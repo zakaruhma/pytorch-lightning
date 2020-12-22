@@ -114,10 +114,14 @@ From Conda
 conda install pytorch-lightning -c conda-forge
 ```
 
+<!-- following section will be skipped from PyPI description -->
+
 Install bleeding-edge (no guarantees)   
 ```bash
 pip install git+https://github.com/PytorchLightning/pytorch-lightning.git@master --upgrade
 ```
+
+<!-- end skipping PyPI description -->
 
 #### Step 0: Add these imports
 
