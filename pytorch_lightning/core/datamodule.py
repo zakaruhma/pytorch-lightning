@@ -381,7 +381,6 @@ class LightningDataModule(DataHooks, CheckpointHooks, metaclass=_DataModuleWrapp
             test_dataset: (optional) Dataset or list of Dataset to be used for test_dataloader()
             batch_size: Batch size to use for each dataloader. Default is 1.
             num_workers: Number of subprocesses to use for data loading. 0 means that the data will be loaded in the main process.
-                number of CPUs available.
 
         """
         def dataloader(ds, shuffle=False):
