@@ -75,5 +75,7 @@ class NativeAMPPlugin(PrecisionPlugin):
             trainer.call_hook("on_after_backward")
 
         with trainer.profiler.profile("optimizer_step"):
-            trainer.scaler.step(optimizer)
+            output = trainer.scaler.step(optimizer)
             trainer.scaler.update()
+
+        return output

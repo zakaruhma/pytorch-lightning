@@ -126,14 +126,14 @@ class LightningOptimizer:
 
         if trainer.on_tpu:
             with trainer.profiler.profile(profiler_name):
-                xm.optimizer_step(optimizer, optimizer_args={'closure': closure, **kwargs})
+                output = xm.optimizer_step(optimizer, optimizer_args={'closure': closure, **kwargs})
 
         elif trainer.amp_backend is not None:
-            trainer.precision_connector.backend.optimizer_step(trainer, optimizer, closure)
+            output = trainer.precision_connector.backend.optimizer_step(trainer, optimizer, closure)
 
         else:
             with trainer.profiler.profile(profiler_name):
-                optimizer.step(closure=closure, *args, **kwargs)
+                output = optimizer.step(closure=closure, *args, **kwargs)
 
         accelerator_backend = trainer.accelerator_backend
         if accelerator_backend is not None and accelerator_backend.rpc_enabled:
@@ -154,6 +154,8 @@ class LightningOptimizer:
             optimizer,
             self._optimizer_idx
         )
+
+        return output
 
     def _check_make_optimizer_step(self, make_optimizer_step: Optional[bool]) -> bool:
         if make_optimizer_step is not None and self._trainer.overriden_optimizer_zero_grad:
@@ -263,6 +265,7 @@ class LightningOptimizer:
                     # Trainer(accumulate_grad_batches=x)
                     opt_dis.step(closure=optimizer_closure, make_optimizer_step=True)
         """
+        output = None
         profiler_name = f"optimizer_step_and_closure_{self._optimizer_idx}"
 
         if closure is None:
@@ -275,12 +278,14 @@ class LightningOptimizer:
         make_optimizer_step = self._check_make_optimizer_step(make_optimizer_step)
 
         if make_optimizer_step:
-            self.__optimizer_step(*args, closure=closure, profiler_name=profiler_name, **kwargs)
+            output = self.__optimizer_step(*args, closure=closure, profiler_name=profiler_name, **kwargs)
         else:
             # make sure to call optimizer_closure when accumulating
             with self._trainer.profiler.profile(f"closure_{self._optimizer_idx}"):
                 with self._trainer.train_loop.block_ddp_sync_behaviour():
                     closure()
+
+        return output
 
     def __repr__(self):
         groups = [

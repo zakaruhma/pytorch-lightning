@@ -142,4 +142,6 @@ class ApexPlugin(PrecisionPlugin):
             trainer.call_hook("on_after_backward")
 
         with trainer.profiler.profile("optimizer_step"):
-            optimizer.step()
+            output = optimizer.step()
+
+        return output

@@ -1181,7 +1181,7 @@ class LightningModule(
         on_tpu: bool = None,
         using_native_amp: bool = None,
         using_lbfgs: bool = None,
-    ) -> None:
+    ) -> Any:
         r"""
         Override this method to adjust the default way the
         :class:`~pytorch_lightning.trainer.trainer.Trainer` calls each optimizer.
@@ -1255,7 +1255,7 @@ class LightningModule(
         if not isinstance(optimizer, LightningOptimizer):
             # wraps into LightingOptimizer only for running step
             optimizer = LightningOptimizer.to_lightning_optimizer(optimizer, self.trainer)
-        optimizer.step(closure=optimizer_closure)
+        return optimizer.step(closure=optimizer_closure)
 
     def optimizer_zero_grad(
         self, epoch: int, batch_idx: int, optimizer: Optimizer, optimizer_idx: int
